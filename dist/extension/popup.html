@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EvAN PCRA Automation</title>
+    <style>
+      :root {
+        --bg: #0b1220;
+        --panel: #0f1a2e;
+        --panel-2: #142241;
+        --border: #1e3258;
+        --border-soft: #182a4d;
+        --text: #e6edf7;
+        --text-soft: #9fb2cd;
+        --text-dim: #6b81a0;
+        --primary: #3b82f6;
+        --primary-soft: #2563eb;
+        --accent: #06b6d4;
+        --success: #10b981;
+        --warning: #f59e0b;
+        --error: #ef4444;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        width: 420px;
+        min-height: 520px;
+        background: var(--bg);
+        color: var(--text);
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 13px;
+        -webkit-font-smoothing: antialiased;
+      }
+      .header {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.18), rgba(6, 182, 212, 0.1));
+        border-bottom: 1px solid var(--border-soft);
+        padding: 14px 16px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .logo {
+        width: 32px;
+        height: 32px;
+        border-radius: 9px;
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        display: grid;
+        place-items: center;
+        color: white;
+        font-weight: 800;
+        font-size: 16px;
+      }
+      .header h1 {
+        font-size: 15px;
+        font-weight: 700;
+      }
+      .header p {
+        font-size: 11px;
+        color: var(--text-dim);
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+      }
+      .body {
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      label {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+      }
+      .upload-area {
+        border: 1.5px dashed var(--border);
+        border-radius: 10px;
+        padding: 18px;
+        text-align: center;
+        cursor: pointer;
+        transition: border-color 0.2s, background 0.2s;
+        background: rgba(255, 255, 255, 0.02);
+      }
+      .upload-area:hover {
+        border-color: var(--primary);
+        background: rgba(59, 130, 246, 0.06);
+      }
+      .upload-area.has-file {
+        border-color: var(--success);
+        border-style: solid;
+        background: rgba(16, 185, 129, 0.06);
+      }
+      .upload-icon {
+        font-size: 22px;
+        margin-bottom: 4px;
+      }
+      .upload-text {
+        font-size: 12px;
+        color: var(--text-soft);
+      }
+      .upload-text strong {
+        color: var(--text);
+      }
+      input[type='file'] {
+        display: none;
+      }
+      .row {
+        display: flex;
+        gap: 10px;
+        align-items: flex-end;
+      }
+      .row > .field {
+        flex: 1;
+      }
+      input[type='number'] {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 9px 12px;
+        color: var(--text);
+        font-size: 13px;
+        width: 100%;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+      input[type='number']:focus {
+        border-color: var(--primary);
+      }
+      .btn-group {
+        display: flex;
+        gap: 8px;
+      }
+      .btn {
+        flex: 1;
+        padding: 10px 14px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 13px;
+        border: 1px solid transparent;
+        cursor: pointer;
+        transition: background 0.15s, border-color 0.15s, opacity 0.15s;
+        font-family: inherit;
+      }
+      .btn:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+      .btn-primary {
+        background: linear-gradient(180deg, var(--primary), var(--primary-soft));
+        color: white;
+      }
+      .btn-primary:hover:not(:disabled) {
+        filter: brightness(1.1);
+      }
+      .btn-warn {
+        background: rgba(245, 158, 11, 0.15);
+        color: var(--warning);
+        border-color: rgba(245, 158, 11, 0.3);
+      }
+      .btn-warn:hover:not(:disabled) {
+        background: rgba(245, 158, 11, 0.25);
+      }
+      .btn-danger {
+        background: rgba(239, 68, 68, 0.15);
+        color: var(--error);
+        border-color: rgba(239, 68, 68, 0.3);
+      }
+      .btn-danger:hover:not(:disabled) {
+        background: rgba(239, 68, 68, 0.25);
+      }
+      .btn-ghost {
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--text);
+        border-color: var(--border);
+      }
+      .btn-ghost:hover:not(:disabled) {
+        background: rgba(255, 255, 255, 0.08);
+      }
+      .progress-card {
+        background: var(--panel);
+        border: 1px solid var(--border-soft);
+        border-radius: 10px;
+        padding: 14px;
+      }
+      .progress-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+      .progress-label {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--text-dim);
+      }
+      .progress-count {
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .progress-bar {
+        height: 6px;
+        background: var(--panel-2);
+        border-radius: 999px;
+        overflow: hidden;
+      }
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--primary), var(--accent));
+        border-radius: 999px;
+        transition: width 0.3s ease;
+        width: 0%;
+      }
+      .status {
+        margin-top: 10px;
+        font-size: 12px;
+        color: var(--text-soft);
+        min-height: 16px;
+      }
+      .status .dot {
+        display: inline-block;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--text-dim);
+        margin-right: 6px;
+        vertical-align: middle;
+      }
+      .status.running .dot {
+        background: var(--success);
+        animation: pulse 1.2s infinite;
+      }
+      .status.paused .dot {
+        background: var(--warning);
+      }
+      .status.error .dot {
+        background: var(--error);
+      }
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.4; }
+      }
+      .error-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 12px;
+        background: rgba(239, 68, 68, 0.08);
+        border: 1px solid rgba(239, 68, 68, 0.25);
+        border-radius: 8px;
+      }
+      .error-section .count {
+        font-size: 12px;
+        color: #fca5a5;
+      }
+      .error-section .count strong {
+        color: var(--error);
+      }
+      .log {
+        max-height: 100px;
+        overflow-y: auto;
+        background: #0a1120;
+        border: 1px solid var(--border-soft);
+        border-radius: 8px;
+        padding: 8px 10px;
+        font-family: 'SF Mono', Menlo, monospace;
+        font-size: 11px;
+        line-height: 1.6;
+      }
+      .log-entry {
+        color: var(--text-soft);
+      }
+      .log-entry.err {
+        color: #fca5a5;
+      }
+      .log-entry.ok {
+        color: #6ee7b7;
+      }
+      .log::-webkit-scrollbar {
+        width: 6px;
+      }
+      .log::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 999px;
+      }
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div class="logo">E</div>
+      <div>
+        <h1>EvAN PCRA Automation</h1>
+        <p>Local Data Entry Tool</p>
+      </div>
+    </div>
+    <div class="body">
+      <div class="field">
+        <label>Excel File (.xlsx)</label>
+        <div class="upload-area" id="uploadArea">
+          <div class="upload-icon">+</div>
+          <div class="upload-text" id="uploadText">Click to select <strong>.xlsx</strong> file</div>
+        </div>
+        <input type="file" id="fileInput" accept=".xlsx,.xls" />
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label>Delay (ms)</label>
+          <input type="number" id="delayInput" value="800" min="100" step="100" />
+        </div>
+        <div class="field">
+          <label>Rows Loaded</label>
+          <input type="text" id="rowsInfo" value="0" readonly style="opacity: 0.7" />
+        </div>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn btn-primary" id="startBtn" disabled>Start</button>
+        <button class="btn btn-warn" id="pauseBtn" disabled>Pause</button>
+        <button class="btn btn-danger" id="stopBtn" disabled>Stop</button>
+      </div>
+
+      <div class="progress-card">
+        <div class="progress-header">
+          <span class="progress-label">Progress</span>
+          <span class="progress-count"><span id="currentRow">0</span> / <span id="totalRows">0</span></span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="status" id="status">
+          <span class="dot"></span><span id="statusText">Idle</span>
+        </div>
+      </div>
+
+      <div class="error-section hidden" id="errorSection">
+        <span class="count">Errors: <strong id="errorCount">0</strong></span>
+        <button class="btn btn-ghost" id="exportBtn" style="flex: 0; padding: 6px 12px; font-size: 12px">Export CSV</button>
+      </div>
+
+      <div class="log hidden" id="logBox"></div>
+    </div>
+    <script src="lib/xlsx.full.min.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>
